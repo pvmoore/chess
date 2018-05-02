@@ -161,8 +161,7 @@ final public class KingEvaluator {
             var sq   = positions[i];
             var file = sq & 7;
             var rank = sq >>> 3;
-            var distance = Math.max( Math.abs(kingFile - file), Math.abs(kingRank - rank) );
-            if(distance < 1 || distance>7) throw new RuntimeException("unexpected distance score");
+            var distance = Math.min( Math.abs(kingFile - file), Math.abs(kingRank - rank) );
 
             score += TROPISM[distance];
             if(pos.pieceAt(sq) == Piece.QUEEN) {
@@ -170,6 +169,6 @@ final public class KingEvaluator {
                 score += TROPISM[distance];
             }
         }
-        return score;
+        return score * 0.1f;
     }
 }

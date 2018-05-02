@@ -1,6 +1,7 @@
 package chess.engine.computer;
 
 import chess.engine.Game;
+import chess.engine.Move;
 import chess.engine.Side;
 import chess.engine.byteboard.MoveGenerator;
 import chess.engine.byteboard.Position;
@@ -78,7 +79,7 @@ final public class ComputerPlayer {
         if(moveGen.numMoves==0) {
             throw new RuntimeException("No moves - we shouldn't get here");
         }
-        //System.out.println("We have "+moveGen.numMoves+" initial moves");
+        System.out.println("We have "+moveGen.numMoves+" initial moves");
 
         // Only 1 possible move available
         if(moveGen.numMoves==1) {
@@ -90,7 +91,7 @@ final public class ComputerPlayer {
         float bestScore         = Float.NEGATIVE_INFINITY;
         float alpha             = Float.NEGATIVE_INFINITY;
         int bestMoveIndex       = 0;
-        int depth               = 1; // 3
+        int depth               = 2; // 3
 
         // todo - Parallelise this
         // todo - Each thread will need own Search instance and position
@@ -113,7 +114,7 @@ final public class ComputerPlayer {
 
             updateTopMoves(moveGen.moves[i], score);
 
-            //System.out.println("Move["+i+"]: "+Move.toString(moveGen.moves[i])+" score="+score+" alpha="+alpha);
+            System.out.println("Move["+i+"]: "+Move.toString(moveGen.moves[i])+" score="+score+" alpha="+alpha);
         }
 
         gamePositionsEvaluated += movePositionsEvaluated;

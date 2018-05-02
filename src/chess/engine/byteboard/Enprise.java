@@ -324,7 +324,7 @@ final public class Enprise {
      * after an enprise move of a piece away from sq.
      * We only need to check for sliding attacks.
      */
-    private static int checkKing(Position pos, Side side, int sq) {
+    private static int checkKing(Position pos, Side side, final int sq) {
         if(sq==-1) return sq;
 
         var ksq   = pos.getKingSquare(side);
@@ -337,51 +337,83 @@ final public class Enprise {
         var enemy  = side.opposite();
 
         if(kRank == sqRank) { // If king is on the same rank
-            if(sq<ksq) {
-                // Left
-                for(int i=sq-1; (i&7)!=7; i--) {
-                    if(pos.pieceAt(i).isRookOrQueen() && pos.sideAt(i)==enemy) { sq = NO_ATTACKER; break; }
+            if(ksq<sq) {
+                // Check right of the king
+                for(int i=ksq+1; (i&7)!=0; i++) {
+                    if(i==sq) continue; // this is the square that will be empty
+                    if(pos.isOccupied(i)) {
+                        if(pos.pieceAt(i).isRookOrQueen() && pos.sideAt(i)==enemy) return NO_ATTACKER;
+                        break;
+                    }
                 }
             } else {
-                // Right
-                for(int i=sq+1; (i&7)!=0; i++) {
-                    if(pos.pieceAt(i).isRookOrQueen() && pos.sideAt(i)==enemy) { sq = NO_ATTACKER; break; }
+                // Check left of the king
+                for(int i=ksq-1; (i&7)!=7; i--) {
+                    if(i==sq) continue; // this is the square that will be empty
+                    if(pos.isOccupied(i)) {
+                        if(pos.pieceAt(i).isRookOrQueen() && pos.sideAt(i)==enemy) return NO_ATTACKER;
+                        break;
+                    }
                 }
             }
         } else if(kFile == sqFile) { // If king is on same file
-            if(sq>ksq) {
-                // Up
-                for(int i=sq+8; i<64; i+=8) {
-                    if(pos.pieceAt(i).isRookOrQueen() && pos.sideAt(i)==enemy) { sq = NO_ATTACKER; break; }
+            if(ksq<sq) {
+                // Check down
+                for(int i=ksq-8; i>=0; i-=8) {
+                    if(i==sq) continue; // this is the square that will be empty
+                    if(pos.isOccupied(i)) {
+                        if(pos.pieceAt(i).isRookOrQueen() && pos.sideAt(i)==enemy) return NO_ATTACKER;
+                        break;
+                    }
                 }
             } else {
-                // Down
-                for(int i=sq-8; i>=0; i-=8) {
-                    if(pos.pieceAt(i).isRookOrQueen() && pos.sideAt(i)==enemy) { sq = NO_ATTACKER; break; }
+                // Check up
+                for(int i=ksq+8; i<64; i+=8) {
+                    if(i==sq) continue; // this is the square that will be empty
+                    if(pos.isOccupied(i)) {
+                        if(pos.pieceAt(i).isRookOrQueen() && pos.sideAt(i)==enemy) return NO_ATTACKER;
+                        break;
+                    }
                 }
             }
         } else if((diff%7)==0) { // If king is on \ diagonal
-            if(sq<ksq) {
-                // Down-right
-                for(int i=sq-7; i>=0 && (i&7)!=0; i-=7) {
-                    if(pos.pieceAt(i).isRookOrQueen() && pos.sideAt(i)==enemy) { sq = NO_ATTACKER; break; }
+            if(ksq<sq) {
+                // Check down-right
+                for(int i=ksq-7; i>=0 && (i&7)!=0; i-=7) {
+                    if(i==sq) continue; // this is the square that will be empty
+                    if(pos.isOccupied(i)) {
+                        if(pos.pieceAt(i).isBishopOrQueen() && pos.sideAt(i)==enemy) return NO_ATTACKER;
+                        break;
+                    }
                 }
             } else {
-                // Up-left
-                for(int i=sq+7; i<64 && (i&7)!=7; i+=7) {
-                    if(pos.pieceAt(i).isRookOrQueen() && pos.sideAt(i)==enemy) { sq = NO_ATTACKER; break; }
+                // Check up-left
+                for(int i=ksq+7; i<64 && (i&7)!=7; i+=7) {
+                    if(i==sq) continue; // this is the square that will be empty
+                    if(pos.isOccupied(i)) {
+                        if(pos.pieceAt(i).isBishopOrQueen() && pos.sideAt(i)==enemy) return NO_ATTACKER;
+                        break;
+                    }
                 }
             }
         } else if((diff%9)==0) {  // If king is on / diagonal
-            if(sq<ksq) {
-                // Down-left
-                for(int i=sq-9; i>=0 && (i&7)!=0; i-=9) {
-                    if(pos.pieceAt(i).isRookOrQueen() && pos.sideAt(i)==enemy) { sq = NO_ATTACKER; break; }
+            if(ksq<sq) {
+                // Check up-right
+                for(int i=ksq+9; i<64 && (i&7)!=0; i+=9) {
+                    if(i==sq) continue; // this is the square that will be empty
+                    if(pos.isOccupied(i)) {
+                        if(pos.pieceAt(i).isBishopOrQueen() && pos.sideAt(i)==enemy) return NO_ATTACKER;
+                        break;
+                    }
                 }
             } else {
-                // Up-right
-                for(int i=sq+9; i<64 && (i&7)!=7; i+=9) {
-                    if(pos.pieceAt(i).isRookOrQueen() && pos.sideAt(i)==enemy) { sq = NO_ATTACKER; break; }
+                // Check down-left
+                for(int i=ksq-9; i>=0 && (i&7)!=7; i-=9) {
+                    if(i==sq) continue; // this is the square that will be empty
+                    if(pos.isOccupied(i)) {
+                        if(pos.pieceAt(i).isBishopOrQueen() && pos.sideAt(i)==enemy) return NO_ATTACKER;
+                        break;
+                    }
                 }
             }
         }

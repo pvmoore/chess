@@ -237,6 +237,8 @@ final public class ChessUI extends UIComponent implements Game.Listener {
             p = pos;
         }
 
+        //p = PositionBuilder.fromFEN("r4b1r/pppqpppp/1k1p1n2/PP1P4/1Q3B2/2N2P2/2P2PPP/R4RK1 b - - 0 16");
+
         game.newGame(p, Side.WHITE);
 
         // Add all pieces to the board
