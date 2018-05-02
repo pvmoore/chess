@@ -12,7 +12,6 @@ import java.util.stream.IntStream;
 final public class ComputerPlayer {
     private Game game;
     private Side side;
-    private long gamePositionsEvaluated;
     private Search search;
     private Position position = new Position();
     private long moveStart;
@@ -21,11 +20,14 @@ final public class ComputerPlayer {
         public int move;
         public float score;
     }
+    private int movePositionsEvaluated, gamePositionsEvaluated;
     private final Object topMovesLock = new Object();
     private MoveInfo[] topMoves;
     private int topMovesIndex;
 
     public MoveInfo[] getTopMoves() { synchronized(topMovesLock) { return Arrays.copyOf(topMoves, topMovesIndex); } }
+    public int getMovePositionsEvaluated() { return movePositionsEvaluated; }
+    public int getGamePositionsEvaluated() { return gamePositionsEvaluated; }
 
     public ComputerPlayer(Game game) {
         this.game       = game;
@@ -38,11 +40,14 @@ final public class ComputerPlayer {
 
         Arrays.stream(topMoves).forEach(it->{it.move = 0; it.score = 0;});
         topMovesIndex = 0;
+        movePositionsEvaluated = 0;
 
         // Spawn off a new thread to calculate move
         thread = new Thread(() -> {
             moveStart = System.nanoTime();
+
             // todo - check the opening book
+
             search();
         });
 
@@ -69,6 +74,7 @@ final public class ComputerPlayer {
         // Get all available moves
         var moveGen = new MoveGenerator();
         moveGen.generateForPosition(position, false);
+
         if(moveGen.numMoves==0) {
             throw new RuntimeException("No moves - we shouldn't get here");
         }
@@ -81,7 +87,6 @@ final public class ComputerPlayer {
         }
 
         // More than 1 possible move. Evaluate them all
-        long positionsEvaluated = 0;
         float bestScore         = Float.NEGATIVE_INFINITY;
         float alpha             = Float.NEGATIVE_INFINITY;
         int bestMoveIndex       = 0;
@@ -95,8 +100,7 @@ final public class ComputerPlayer {
             float score = -search.getScore(position, depth, alpha);
             position.undoMove();
 
-            positionsEvaluated     += search.getPositionsEvaluated();
-            gamePositionsEvaluated += search.getPositionsEvaluated();
+            movePositionsEvaluated += search.getPositionsEvaluated();
 
             if(score > alpha) {
                 alpha = score;
@@ -112,10 +116,12 @@ final public class ComputerPlayer {
             //System.out.println("Move["+i+"]: "+Move.toString(moveGen.moves[i])+" score="+score+" alpha="+alpha);
         }
 
+        gamePositionsEvaluated += movePositionsEvaluated;
+
         makeMove(moveGen.moves[bestMoveIndex]);
 
         //System.out.println("Highest score = "+bestScore);
-        //System.out.println("Positions evaluated = "+positionsEvaluated);
+        //System.out.println("Positions evaluated = "+movePositionsEvaluated);
     }
     private void updateTopMoves(int move, float score) {
         synchronized(topMovesLock) {

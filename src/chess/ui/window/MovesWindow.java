@@ -21,11 +21,13 @@ final public class MovesWindow extends AbsMovableWindow implements Game.Listener
     //===============================================================================
     private ArrayList<MoveInfo> moves = new ArrayList<>();
     private TextRenderer timesText;
+    private Font font;
     //===============================================================================
     public MovesWindow(ChessUI chess) {
         super(chess);
 
-        this.timesText = new TextRenderer(Font.get("couriernew"))
+        this.font = Font.get("couriernew");
+        this.timesText = new TextRenderer(font)
             .setVP(chess.getCamera().VP())
             .setColour(RGBA.BLACK)
             .setSize(14);
@@ -68,24 +70,38 @@ final public class MovesWindow extends AbsMovableWindow implements Game.Listener
     @Override protected void updateForeground() {
         var p               = getAbsPos();
         var height          = 16;
-        var fullMovesToShow = 16;
+        var fullMovesToShow = 32;
         var index           = Math.max(0, moves.size() - fullMovesToShow*2) & ~1;
 
         timesText.clearText();
 
+        var x = p.getX() + 33;
         int y = p.getY() + 30;
 
         for(int i=0; index<moves.size(); i++) {
+
+            var m       = moves.get(index++);
+            var moveStr = Move.toAlgebraicString(m.move, m.isCheck);
+
+
             if((i&1)==0) {
                 // Display the move number
                 timesText.appendText(""+(index/2+1)+":", new Int2(p.getX() + 8, y));
-            }
-            // Display the move
-            var m = moves.get(index++);
-            timesText.appendText(Move.toAlgebraicString(m.move, m.isCheck),
-                                 new Int2(p.getX()+33, y));
 
-            y += height;
+                // Display white move
+                timesText.appendText(moveStr, new Int2(x, y));
+
+                var width = (int)font.getDimension(moveStr, 14).getX();
+                x += width + 10;
+
+            } else {
+                // Display black move
+
+                timesText.appendText(moveStr, new Int2(x, y));
+
+                x = p.getX() + 33;
+                y += height;
+            }
         }
     }
 }

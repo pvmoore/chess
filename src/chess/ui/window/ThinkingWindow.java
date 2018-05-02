@@ -76,5 +76,14 @@ final public class ThinkingWindow extends AbsMovableWindow implements Game.Liste
             text.appendText(str, new Int2(p.getX()+8, p.getY() + y));
             y += 20;
         }
+
+        var gamePosEval = chess.getGame().getComputerPlayer().getGamePositionsEvaluated();
+        var movePosEval = chess.getGame().getComputerPlayer().getMovePositionsEvaluated();
+
+        var pep = new Int2(p.getX()+8, p.getY() + y + 40);
+
+        text.appendText("Positions", pep)
+            .appendText("evaluated:", pep.add(0,20))
+            .appendText("" + movePosEval + " (" + gamePosEval+")", pep.add(0,40));
     }
 }

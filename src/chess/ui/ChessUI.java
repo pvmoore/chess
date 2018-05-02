@@ -78,7 +78,7 @@ final public class ChessUI extends UIComponent implements Game.Listener {
         var boardPos     = new Int2(0, 32);
         var boardSize    = new Int2(8*squareSize+2*margin, 8*squareSize+2*margin);
 
-        var movesUISize  = new Int2(85, boardSize.getY() - margin*2);
+        var movesUISize  = new Int2(124, boardSize.getY() - margin*2);
 
         var thinkingSize = new Int2(120, boardSize.getY() - margin*2);
 
