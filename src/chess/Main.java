@@ -4,7 +4,7 @@ import chess.ui.ChessUI;
 import juice.Window;
 
 public class Main {
-    private static final String VERSION = "2.0.2";
+    private static final String VERSION = "2.0.3";
     private Window window;
     private ChessUI chess;
 

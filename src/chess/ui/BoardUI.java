@@ -140,23 +140,18 @@ final public class BoardUI extends UIComponent implements Game.Listener {
     @Override public void onNewGame(Position pos) {
         // Remove highlights
         highlights.forEach(it->it.setSize(Int2.ZERO));
+
+        // Add highlight if position has a previous move
+        if(pos.moveHistory.size()>0) {
+            addHighlight(pos, pos.moveHistory.getLast());
+        }
     }
 
     @Override public void onGameMove(Position pos, int move) {
         if(chess.getGame().isHumansMove()) {
-            var size = new Int2(squareSize,squareSize);
 
-            if(pos.isCheck()) {
-                var sq = pos.getKingSquare(pos.sideToMove());
-                highlights.get(2).setSize(size);
-                highlights.get(2).setRelPos(getPosForSquare(sq).sub(3));
-            }
+            addHighlight(pos, move);
 
-            highlights.get(0).setSize(size);
-            highlights.get(1).setSize(size);
-
-            highlights.get(0).setRelPos(getPosForSquare(Move.from(move)).sub(3));
-            highlights.get(1).setRelPos(getPosForSquare(Move.to(move)).sub(3));
         } else {
             highlights.get(0).setSize(Int2.ZERO);
             highlights.get(1).setSize(Int2.ZERO);
@@ -166,5 +161,21 @@ final public class BoardUI extends UIComponent implements Game.Listener {
 
     @Override public void onGameMoveUndone(Position pos, int move) {
 
+    }
+    //========================================================================
+    private void addHighlight(Position pos, int move) {
+        var size = new Int2(squareSize,squareSize);
+
+        if(pos.isCheck()) {
+            var sq = pos.getKingSquare(pos.sideToMove());
+            highlights.get(2).setSize(size);
+            highlights.get(2).setRelPos(getPosForSquare(sq).sub(3));
+        }
+
+        highlights.get(0).setSize(size);
+        highlights.get(1).setSize(size);
+
+        highlights.get(0).setRelPos(getPosForSquare(Move.from(move)).sub(3));
+        highlights.get(1).setRelPos(getPosForSquare(Move.to(move)).sub(3));
     }
 }

@@ -233,9 +233,6 @@ final public class ChessUI extends UIComponent implements Game.Listener {
             pieces.detachAllFromUI();
             boardUI.setupPosition(game.getPosition(), pieces);
 
-            // todo - add highlight squares
-
-
             getGameMenu().getItem(0).setEnabled(false); // new game
             getGameMenu().getItem(1).setEnabled(true);  // resign
 
