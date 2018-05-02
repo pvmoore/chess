@@ -184,6 +184,7 @@ final public class ChessUI extends UIComponent implements Game.Listener {
         // Escape key quits
         if(keys.contains(GLFW_KEY_ESCAPE)) {
             exit();
+            return;
         }
 
         // Check to see whether the computer has made its move
@@ -197,7 +198,7 @@ final public class ChessUI extends UIComponent implements Game.Listener {
     }
     //================================================================================
     private void exit() {
-        options.set("position", PositionWriter.toFEN(game.getPosition()));
+        options.set("position-movehistory", game.getPosition().moveHistory);
 
         options.set("EvaluationWindow-visible", !getWindowMenu().getItem("eval").isEnabled());
         options.set("MovesWindow-visible", !getWindowMenu().getItem("move").isEnabled());
@@ -213,33 +214,61 @@ final public class ChessUI extends UIComponent implements Game.Listener {
         // todo
     }
     private void continueGame() {
-        String fen = options.getString("position");
-        if(fen!=null) {
-            newGame(PositionBuilder.fromFEN(fen));
+        var fen     = options.getString("position-start");
+        var history = options.getIntList("position-movehistory");
 
-            // add highlight squares
+        if(fen!=null && history!=null) {
+
+            // Replay moves from start position
+            var pos = PositionBuilder.fromFEN(fen);
+
+            for(var m : history) {
+                pos.applyMove(m);
+            }
+
+            // Start the game
+            game.newGame(pos, Side.WHITE);
+
+            // Add all pieces to the board
+            pieces.detachAllFromUI();
+            boardUI.setupPosition(game.getPosition(), pieces);
+
+            // todo - add highlight squares
+
+
+            getGameMenu().getItem(0).setEnabled(false); // new game
+            getGameMenu().getItem(1).setEnabled(true);  // resign
+
         } else {
+            // Nothing to continue. Just start a new standard game
             newGame(null);
         }
     }
     private void newGame(Position pos) {
+        if(pos==null) {
+            pos = PositionBuilder.standard();
+        }
+        var fen = PositionWriter.toFEN(pos);
+
+        options.set("position-start", fen);
+
         getGameMenu().getItem(0).setEnabled(false); // new game
         getGameMenu().getItem(1).setEnabled(true);  // resign
 
-        var p  = PositionBuilder.standard();
-        var p1 = PositionBuilder.fromFEN("rnbqkbnr/8/8/8/8/4r3/4q3/RN2K2R w KQkq - 0 1");
-        var p2 = PositionBuilder.fromFEN("8/k3PP2/8/3P4/PPP5/8/6PP/7K w KQ - 1 10"); // white promo
-        var p3 = PositionBuilder.fromFEN("7k/8/8/8/8/8/pp6/7K w KQ - 1 10"); // black promo
-        var p4 = PositionBuilder
-            .fromFEN("r1bqkb1r/ppp1pppp/35/3pP3/3P4/8/PPP1P2P/RNBQKBNR w KQkq d6 0 5"); // white en passant
-
-        if(pos!=null) {
-            p = pos;
-        }
+//        var p  = PositionBuilder.standard();
+//        var p1 = PositionBuilder.fromFEN("rnbqkbnr/8/8/8/8/4r3/4q3/RN2K2R w KQkq - 0 1");
+//        var p2 = PositionBuilder.fromFEN("8/k3PP2/8/3P4/PPP5/8/6PP/7K w KQ - 1 10"); // white promo
+//        var p3 = PositionBuilder.fromFEN("7k/8/8/8/8/8/pp6/7K w KQ - 1 10"); // black promo
+//        var p4 = PositionBuilder
+//            .fromFEN("r1bqkb1r/ppp1pppp/35/3pP3/3P4/8/PPP1P2P/RNBQKBNR w KQkq d6 0 5"); // white en passant
+//
+//        if(pos!=null) {
+//            p = pos;
+//        }
 
         //p = PositionBuilder.fromFEN("r4b1r/pppqpppp/1k1p1n2/PP1P4/1Q3B2/2N2P2/2P2PPP/R4RK1 b - - 0 16");
 
-        game.newGame(p, Side.WHITE);
+        game.newGame(pos, Side.WHITE);
 
         // Add all pieces to the board
         pieces.detachAllFromUI();

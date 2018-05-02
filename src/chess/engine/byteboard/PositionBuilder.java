@@ -52,7 +52,6 @@ final public class PositionBuilder {
      * example: "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"
      * 		or:	"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"  (start position)
      *          "Q7/8/4p1p1/3kP2r/1R3PKP/8/8/8 b - - 0 54" (no castling)
-     *
      **/
     public static Position fromFEN(String fen) {
         Position pos = new Position();

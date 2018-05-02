@@ -5,6 +5,9 @@ import juice.types.Int2;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
 final public class Options {
@@ -42,6 +45,19 @@ final public class Options {
         if(x==null || y==null) return null;
         return new Int2(Integer.valueOf(x), Integer.valueOf(y));
     }
+    public List<Integer> getIntList(String key) {
+        String s = getString(key);
+        var list = new ArrayList<Integer>();
+        if(s==null) return list;
+
+        s = s.replace('[', ' ').replace(']',' ').trim();
+        if(s.length()==0) return list;
+
+        for(var token : s.split(",")) {
+            list.add(Integer.valueOf(token.trim()));
+        }
+        return list;
+    }
     public void set(String key, String value) {
         props.put(key, value);
     }
@@ -54,6 +70,9 @@ final public class Options {
     public void set(String key, Int2 i) {
         props.put(key+"x", ""+i.getX());
         props.put(key+"y", ""+i.getY());
+    }
+    public void set(String key, Collection<Integer> c) {
+        props.put(key, c.toString());
     }
     //===============================================================================
     private void load() {

@@ -1,7 +1,6 @@
 package chess.engine.computer;
 
 import chess.engine.Game;
-import chess.engine.Move;
 import chess.engine.Side;
 import chess.engine.byteboard.MoveGenerator;
 import chess.engine.byteboard.Position;
@@ -114,7 +113,7 @@ final public class ComputerPlayer {
 
             updateTopMoves(moveGen.moves[i], score);
 
-            System.out.println("Move["+i+"]: "+Move.toString(moveGen.moves[i])+" score="+score+" alpha="+alpha);
+            //System.out.println("Move["+i+"]: "+Move.toString(moveGen.moves[i])+" score="+score+" alpha="+alpha);
         }
 
         gamePositionsEvaluated += movePositionsEvaluated;

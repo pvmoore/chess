@@ -48,7 +48,7 @@ final public class Game {
         this.computersMove    = 0;
         this.gameOver         = false;
 
-        listeners.forEach(it->it.onNewGame(position));
+        listeners.forEach(it -> it.onNewGame(position));
 
         if(checkForMate()) {
             return;

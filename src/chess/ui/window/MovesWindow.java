@@ -3,6 +3,7 @@ package chess.ui.window;
 import chess.engine.Game;
 import chess.engine.Move;
 import chess.engine.byteboard.Position;
+import chess.engine.byteboard.PositionBuilder;
 import chess.ui.ChessUI;
 import juice.Frame;
 import juice.graphics.Font;
@@ -44,11 +45,22 @@ final public class MovesWindow extends AbsMovableWindow implements Game.Listener
     }
     // Game.Listener
     @Override public void onNewGame(Position pos) {
+        moves.clear();
         timesText.clearText();
+
+        // Replay moves if this new game is a continuation
+        if(pos.moveHistory.size() > 0) {
+
+            var temp = PositionBuilder.fromFEN(chess.getOptions().getString("position-start"));
+            for(var m : pos.moveHistory) {
+                temp.applyMove(m);
+                onGameMove(temp, m);
+            }
+        }
     }
     // Game.Listener
     @Override public void onGameMove(Position pos, int move) {
-        moves.add(new MoveInfo(move, chess.getGame().getPosition().isCheck()));
+        moves.add(new MoveInfo(move, pos.isCheck()));
 
         updateForeground();
     }
