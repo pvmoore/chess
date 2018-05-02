@@ -1,4 +1,4 @@
-#Wed May 02 10:49:27 BST 2018
+#Wed May 02 10:59:47 BST 2018
 ThinkingWindow-posx=730
 EvaluationWindow-posy=65
 ThinkingWindow-posy=65
@@ -8,4 +8,4 @@ MovesWindow-posy=65
 MovesWindow-visible=true
 ThinkingWindow-visible=true
 MovesWindow-posx=636
-position=rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+position=1rbqkb1r/ppppp1pp/2n2p1n/8/2BP4/4PN2/PPP2PPP/RNBQK2R w KQk - 3 5
