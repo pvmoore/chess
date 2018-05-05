@@ -52,6 +52,11 @@ final public class PieceUI extends Sprite implements DragComponent.Listener, Gam
         this.square = sq;
         enableDragIfItsHumansTurn();
     }
+
+    // UIComponent
+    @Override public void onRemoved() {
+        square = -1;
+    }
     // Implement UIComponent / extend Sprite
     @Override public void update(Frame frame) {
         super.update(frame);
@@ -64,11 +69,7 @@ final public class PieceUI extends Sprite implements DragComponent.Listener, Gam
             originalPos = getRelPos();
             // Move this component to the end of the draw queue so that
             // it is drawn over all other pieces
-            getStage().addAfterUpdateHook(()->{
-                var parent = getParent();
-                detach();
-                parent.add(this);
-            });
+            getStage().addAfterUpdateHook(()-> getParent().moveToFront(this));
         }
     }
     // Implement DragComponent.Listener

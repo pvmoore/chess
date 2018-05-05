@@ -18,12 +18,6 @@ final public class ChessSet {
         // Ensure these are destroyed as they might not be attached to the UI
         pieces.forEach(UIComponent::destroy);
     }
-    public void detachAllFromUI() {
-        pieces.forEach(it-> {
-            it.detach();
-            it.setSquare(-1);
-        });
-    }
     /**
      * Assumes that if a piece is attached to the display then a new one should be generated
      * otherwise it will be re-used.

@@ -89,6 +89,12 @@ final public class BoardUI extends UIComponent implements Game.Listener {
         }
     }
     public void setupPosition(Position p, ChessSet pieces) {
+
+        // Detach any pieces already on the board
+        getChildren().stream()
+                     .filter(it->it instanceof PieceUI)
+                     .forEach(UIComponent::detach);
+
         var size = new Int2(squareSize-6, squareSize-6);
 
         for(int rank=7; rank>=0; rank--) {
@@ -143,11 +149,12 @@ final public class BoardUI extends UIComponent implements Game.Listener {
 
         // Add highlight if position has a previous move
         if(pos.moveHistory.size()>0) {
-            addHighlight(pos, pos.moveHistory.getLast());
+            addHighlight(pos, pos.getLastMove());
         }
     }
 
     @Override public void onGameMove(Position pos, int move) {
+
         if(chess.getGame().isHumansMove()) {
 
             addHighlight(pos, move);

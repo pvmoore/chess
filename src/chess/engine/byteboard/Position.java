@@ -126,8 +126,8 @@ final public class Position {
     }
     //============================================================================
     public State state = new State();
-    public Deque<Integer> moveHistory = new ArrayDeque<>();
-    private Deque<State> stateHistory  = new ArrayDeque<>();
+    public List<Integer> moveHistory = new ArrayList<>();
+    private List<State> stateHistory  = new ArrayList<>();
 
     public void copyTo(Position p) {
         state.copyTo(p.state);
@@ -136,8 +136,8 @@ final public class Position {
         p.stateHistory.clear();
     }
     public void applyMove(int move) {
-        stateHistory.addLast(state.copyTo(new State()));
-        moveHistory.addLast(move);
+        stateHistory.add(state.copyTo(new State()));
+        moveHistory.add(move);
 
         var from    = Move.from(move);
         var to      = Move.to(move);
@@ -284,8 +284,8 @@ final public class Position {
         state.fullMoveNumber += (state.whiteToMove ? 1 : 0);
     }
     public int undoMove() {
-        state = stateHistory.removeLast();
-        int move = moveHistory.removeLast();
+        state = stateHistory.remove(stateHistory.size()-1);
+        int move = moveHistory.remove(moveHistory.size()-1);
 
         // It's probably quicker to not copy the state
 
@@ -378,6 +378,10 @@ final public class Position {
                state.whiteNumPieces < 5 ||
                state.blackNumPieces < 5;
     }
+    public int getLastMove() {
+        return moveHistory.get(moveHistory.size()-1);
+    }
+    //==============================================================================
     @Override public int hashCode() {
         return state.hashCode();
     }

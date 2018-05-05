@@ -78,7 +78,7 @@ final public class ComputerPlayer {
         if(moveGen.numMoves==0) {
             throw new RuntimeException("No moves - we shouldn't get here");
         }
-        System.out.println("We have "+moveGen.numMoves+" initial moves");
+        //System.out.println("We have "+moveGen.numMoves+" initial moves");
 
         // Only 1 possible move available
         if(moveGen.numMoves==1) {

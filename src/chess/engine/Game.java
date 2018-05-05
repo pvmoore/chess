@@ -7,9 +7,11 @@ import chess.engine.computer.ComputerPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 final public class Game {
     private List<Listener> listeners = new ArrayList<>();
+    private List<Listener> pendingListeners = new ArrayList<>();
     private Position position;
     private Side humanPlayersSide;
     private ComputerPlayer computerPlayer;
@@ -27,7 +29,7 @@ final public class Game {
     public Side humanPlayersSide() { return humanPlayersSide; }
     public boolean isHumansMove() { return humanPlayersSide==position.sideToMove(); }
     public boolean isComputersMove() { return !isHumansMove(); }
-    public void addListener(Listener l) { listeners.add(l); }
+    public void addListener(Listener l) { pendingListeners.add(l); }
     public int getComputersMove() { return computersMove; }
     public ComputerPlayer getComputerPlayer() { return computerPlayer; }
 
@@ -48,7 +50,7 @@ final public class Game {
         this.computersMove    = 0;
         this.gameOver         = false;
 
-        listeners.forEach(it -> it.onNewGame(position));
+        informListeners(it -> it.onNewGame(position));
 
         if(checkForMate()) {
             return;
@@ -64,7 +66,8 @@ final public class Game {
     public void makeMove(int move) {
         //System.out.println("makeMove "+Move.toString(move));
         position.applyMove(move);
-        listeners.forEach(it->it.onGameMove(position, move));
+
+        informListeners(it->it.onGameMove(position, move));
 
         //System.out.println("Enprise:\n"+ Enprise.toString(position, false));
         System.out.println(PositionWriter.toFEN(position));
@@ -80,11 +83,11 @@ final public class Game {
     }
     public void undoMove() {
         var move = position.undoMove();
-        listeners.forEach(it->it.onGameMoveUndone(position, move));
+        informListeners(it->it.onGameMoveUndone(position, move));
     }
     public void resign() {
         gameOver = true;
-        listeners.forEach(it->it.onGameOver(position, true));
+        informListeners(it->it.onGameOver(position, true));
     }
     public void save() {
         // todo
@@ -95,9 +98,18 @@ final public class Game {
         gen.generateForPosition(position, false);
         if(gen.numMoves==0) {
             gameOver = true;
-            listeners.forEach(it->it.onGameOver(position, false));
+            informListeners(it->it.onGameOver(position, false));
             return true;
         }
         return false;
+    }
+    private void informListeners(Consumer<Listener> c) {
+        listeners.addAll(pendingListeners);
+        pendingListeners.clear();
+
+        listeners.forEach(c);
+
+        listeners.addAll(pendingListeners);
+        pendingListeners.clear();
     }
 }

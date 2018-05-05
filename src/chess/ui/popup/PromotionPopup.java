@@ -71,16 +71,15 @@ final public class PromotionPopup extends UIComponent implements DragComponent.L
     }
     @Override public void update(Frame frame) {
 
-        dragComponent.update(frame);
-
         for(var e : frame.getLocalMouseEvents(this, Mouse.EventType.BUTTON_PRESS)) {
 
             if(e.button == 0) {
-                frame.consume(e);
 
                 var opt = Arrays.stream(pieces).filter(it -> it.enclosesPoint(e.pos)).findFirst();
 
                 if(opt.isPresent()) {
+                    frame.consume(e);
+
                     Piece selected     = opt.get().getPiece();
                     PieceUI newPieceUI = chess.getPieces()
                                               .takeFromBox(selected, chess.getGame().getPosition().sideToMove());
@@ -116,6 +115,7 @@ final public class PromotionPopup extends UIComponent implements DragComponent.L
                 }
             }
         }
+        dragComponent.update(frame);
     }
 
     @Override public void render(Frame frame) {

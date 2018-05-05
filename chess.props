@@ -1,12 +1,12 @@
-#Wed May 02 18:05:22 BST 2018
-EvaluationWindow-posy=69
-ThinkingWindow-posx=765
-EvaluationWindow-posx=892
-ThinkingWindow-posy=68
+#Sat May 05 17:54:10 BST 2018
+EvaluationWindow-posy=70
+ThinkingWindow-posx=766
+EvaluationWindow-posx=898
+ThinkingWindow-posy=67
 EvaluationWindow-visible=true
 MovesWindow-posy=67
 MovesWindow-visible=true
 ThinkingWindow-visible=true
 MovesWindow-posx=632
-position-movehistory=[5835, 6452, 39195, 9853]
+position-movehistory=[5193, 15230, 8770, 14125, 13441, 14492]
 position-start=rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1

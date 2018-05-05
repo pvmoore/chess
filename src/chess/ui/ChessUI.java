@@ -230,7 +230,6 @@ final public class ChessUI extends UIComponent implements Game.Listener {
             game.newGame(pos, Side.WHITE);
 
             // Add all pieces to the board
-            pieces.detachAllFromUI();
             boardUI.setupPosition(game.getPosition(), pieces);
 
             getGameMenu().getItem(0).setEnabled(false); // new game
@@ -254,7 +253,7 @@ final public class ChessUI extends UIComponent implements Game.Listener {
 
 //        var p  = PositionBuilder.standard();
 //        var p1 = PositionBuilder.fromFEN("rnbqkbnr/8/8/8/8/4r3/4q3/RN2K2R w KQkq - 0 1");
-//        var p2 = PositionBuilder.fromFEN("8/k3PP2/8/3P4/PPP5/8/6PP/7K w KQ - 1 10"); // white promo
+//        pos = PositionBuilder.fromFEN("8/k3PP2/8/3P4/PPP5/8/6PP/7K w KQ - 1 10"); // white promo
 //        var p3 = PositionBuilder.fromFEN("7k/8/8/8/8/8/pp6/7K w KQ - 1 10"); // black promo
 //        var p4 = PositionBuilder
 //            .fromFEN("r1bqkb1r/ppp1pppp/35/3pP3/3P4/8/PPP1P2P/RNBQKBNR w KQkq d6 0 5"); // white en passant
@@ -268,7 +267,6 @@ final public class ChessUI extends UIComponent implements Game.Listener {
         game.newGame(pos, Side.WHITE);
 
         // Add all pieces to the board
-        pieces.detachAllFromUI();
         boardUI.setupPosition(game.getPosition(), pieces);
     }
     private void resign() {
