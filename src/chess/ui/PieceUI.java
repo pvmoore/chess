@@ -84,7 +84,7 @@ final public class PieceUI extends Sprite implements DragComponent.Listener, Gam
 
         if(move==-1) {
             // Move the piece back to its original position
-            animateTo(originalPos, EasingType.EASE_OUT);
+            animateTo(board.getPosForSquare(square), EasingType.EASE_OUT);
         } else {
             if(piece==Piece.PAWN && (to<8 || to>55)) {
                 // If move is a promotion then ask the player to select a piece
