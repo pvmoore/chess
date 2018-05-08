@@ -90,7 +90,7 @@ final public class ComputerPlayer {
         float bestScore         = Float.NEGATIVE_INFINITY;
         float alpha             = Float.NEGATIVE_INFINITY;
         int bestMoveIndex       = 0;
-        int depth               = 2; // 3
+        int depth               = 3;
 
         // todo - Parallelise this
         // todo - Each thread will need own Search instance and position
